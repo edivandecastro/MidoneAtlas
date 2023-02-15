@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { defineStore } from "pinia";
 import { Icon } from "../base-components/Lucide/Lucide.vue";
 
@@ -13,19 +14,19 @@ export interface SideMenuState {
   menu: Array<Menu | "divider">;
 }
 
-export const useSideMenuStore = defineStore("sideMenu", {
-  state: (): SideMenuState => ({
-    menu: [
-      {
-        icon: "Activity",
-        pageName: "side-menu-page-1",
-        title: "Page 1",
-      },
-      {
-        icon: "Activity",
-        pageName: "side-menu-page-2",
-        title: "Page 2",
-      },
-    ],
-  }),
+let menus = {menu: []}
+
+await axios.get('https://snapcode.proxy.beeceptor.com/menus')
+  .then(response => {
+    // Armazena os dados da API no estado do armazenamento de dados reativos
+    menus = response.data;
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+const useSideMenuStore = defineStore("sideMenu", {
+  state: (): SideMenuState => menus
 });
+
+export { useSideMenuStore };
