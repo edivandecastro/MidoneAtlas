@@ -1,12 +1,13 @@
-import axios from 'axios';
+import { MenuService } from '@/services/MenuService'
+import { baseUrl } from '@/services/Api';
 import { defineStore } from "pinia";
-import { Icon } from "../base-components/Lucide/Lucide.vue";
+import { Menu } from "@/models/Menu"
 
-export interface Menu {
-  icon: Icon;
+export interface MenuApi {
+  icon: string;
   title: string;
-  pageName?: string;
-  subMenu?: Menu[];
+  page_name?: string;
+  sub_menu?: Menu[];
   ignore?: boolean;
 }
 
@@ -14,12 +15,15 @@ export interface SideMenuState {
   menu: Array<Menu | "divider">;
 }
 
-let menus = {menu: []}
+let menus: SideMenuState = { menu: [] }
 
-await axios.get('https://snapcode.proxy.beeceptor.com/menus')
+let menuService = new MenuService(baseUrl.atlas_api_v1);
+
+await menuService.getMenus()
   .then(response => {
-    // Armazena os dados da API no estado do armazenamento de dados reativos
-    menus = response.data;
+    response.data.menus.forEach((menu: MenuApi) => {
+      menus.menu.push(new Menu(menu.icon, menu.title, menu.page_name))
+    });
   })
   .catch(error => {
     console.log(error);
