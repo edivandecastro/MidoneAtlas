@@ -1,69 +1,72 @@
 import { Router, RouteLocationNormalizedLoaded } from "vue-router";
-import { Menu } from "../../stores/side-menu";
+import { Menu } from "@/models/Menu";
+import { FormattedMenu } from "@/models/FormattedMenu";
 import { slideUp, slideDown } from "../../utils/helper";
 
 interface Route extends RouteLocationNormalizedLoaded {
   forceActiveMenu?: string;
 }
 
-export interface FormattedMenu extends Menu {
-  active?: boolean;
-  activeDropdown?: boolean;
-  subMenu?: FormattedMenu[];
-}
-
 // Setup side menu
-const findActiveMenu = (subMenu: Menu[], route: Route): boolean => {
+const findActiveMenu = (subMenu: Menu[] | undefined, route: Route): boolean => {
   let match = false;
+
+  if (subMenu === undefined)
+    return false
+
   subMenu.forEach((item) => {
     if (
       ((route.forceActiveMenu !== undefined &&
-        item.pageName === route.forceActiveMenu) ||
+        item.getPageName() === route.forceActiveMenu) ||
         (route.forceActiveMenu === undefined &&
-          item.pageName === route.name)) &&
-      !item.ignore
+          item.getPageName() === route.name)) &&
+      !item.getIgnore()
     ) {
       match = true;
-    } else if (!match && item.subMenu) {
-      match = findActiveMenu(item.subMenu, route);
+    } else if (!match && item.getSubMenu()) {
+      match = findActiveMenu(item.getSubMenu(), route);
     }
   });
   return match;
 };
 
-const nestedMenu = (menu: Array<Menu | "divider">, route: Route) => {
-  const formattedMenu: Array<FormattedMenu | "divider"> = [];
-  menu.forEach((item) => {
-    if (typeof item !== "string") {
-      const menuItem: FormattedMenu = {
-        icon: item.icon,
-        title: item.title,
-        pageName: item.pageName,
-        subMenu: item.subMenu,
-        ignore: item.ignore,
-      };
-      menuItem.active =
-        ((route.forceActiveMenu !== undefined &&
-          menuItem.pageName === route.forceActiveMenu) ||
-          (route.forceActiveMenu === undefined &&
-            menuItem.pageName === route.name) ||
-          (menuItem.subMenu && findActiveMenu(menuItem.subMenu, route))) &&
-        !menuItem.ignore;
+const nestedMenu = (menus: Array<Menu | "divider"> | undefined, route: Route) => {
+  if (menus === undefined)
+    return [];
 
-      if (menuItem.subMenu) {
-        menuItem.activeDropdown = findActiveMenu(menuItem.subMenu, route);
+  const formattedMenu: Array<FormattedMenu | "divider"> = [];
+  menus.forEach((menu) => {
+    if (typeof menu !== "string") {
+      const menuItem = new FormattedMenu(
+        menu.getIcon(),
+        menu.getTitle(),
+        menu.getPageName(),
+        menu.getSubMenu(),
+        menu.getIgnore(),
+      );
+      let active = ((route.forceActiveMenu !== undefined &&
+            menuItem.getPageName() === route.forceActiveMenu) ||
+          (route.forceActiveMenu === undefined &&
+            menuItem.getPageName() === route.name) ||
+          (menuItem.getSubMenu() && findActiveMenu(menuItem.getSubMenu(), route))) &&
+        !menuItem.getIgnore();
+
+      menuItem.setActive(active);
+
+      if (menuItem.getSubMenu()) {
+        menuItem.setActiveDropdown(findActiveMenu(menuItem.getSubMenu(), route));
 
         // Nested menu
         const subMenu: Array<FormattedMenu> = [];
-        nestedMenu(menuItem.subMenu, route).map(
+        nestedMenu(menuItem.getSubMenu(), route).map(
           (menu) => typeof menu !== "string" && subMenu.push(menu)
         );
-        menuItem.subMenu = subMenu;
+        menuItem.setSubMenu(subMenu);
       }
 
       formattedMenu.push(menuItem);
     } else {
-      formattedMenu.push(item);
+      formattedMenu.push(menu);
     }
   });
 
@@ -71,12 +74,12 @@ const nestedMenu = (menu: Array<Menu | "divider">, route: Route) => {
 };
 
 const linkTo = (menu: FormattedMenu, router: Router) => {
-  if (menu.subMenu) {
-    menu.activeDropdown = !menu.activeDropdown;
+  if (menu.getSubMenu()?.length !== 0) {
+    menu.setActiveDropdown(!menu.getActiveDropdown());
   } else {
-    if (menu.pageName !== undefined) {
+    if (menu.getPageName !== undefined) {
       router.push({
-        name: menu.pageName,
+        name: menu.getPageName(),
       });
     }
   }

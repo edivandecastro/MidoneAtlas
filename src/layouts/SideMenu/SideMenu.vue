@@ -8,7 +8,8 @@ import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import MobileMenu from "../../components/MobileMenu";
 import { useSideMenuStore } from "../../stores/side-menu";
-import { FormattedMenu, nestedMenu, enter, leave } from "./side-menu";
+import { nestedMenu, enter, leave } from "./side-menu";
+import { FormattedMenu } from "@/models/FormattedMenu";
 import { watch, reactive, computed, onMounted } from "vue";
 
 const route = useRoute();
@@ -17,7 +18,22 @@ const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | "divider"
   Object.assign(formattedMenu, computedFormattedMenu);
 };
 const sideMenuStore = useSideMenuStore();
-const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
+
+const menus: Array<FormattedMenu | "divider"> = [];
+
+sideMenuStore.menu.forEach((m: any) => {
+  let submenus: FormattedMenu[] = [];
+
+  m.getSubMenu()?.forEach((menu: any) => {
+    submenus.push(
+      new FormattedMenu(menu.getIcon(), menu.getTitle(), menu.getPageName(), [], menu.getIgnore())
+    );
+  });
+
+  menus.push(new FormattedMenu(m.getIcon(), m.getTitle(), m.getPageName(), submenus, m.getIgnore()));
+});
+
+const sideMenu = computed(() => nestedMenu(menus, route));
 
 watch(sideMenu, () => {
   setFormattedMenu(sideMenu.value);
@@ -63,7 +79,7 @@ onMounted(() => {
                   // Animation
                   [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
                     (menuKey + 1) * 10
-                  }`]: !menu.active,
+                  }`]: !menu.getActive(),
                 }"
                 :menu="menu"
                 :formattedMenuState="[formattedMenu, setFormattedMenu]"
@@ -72,34 +88,37 @@ onMounted(() => {
               <!-- BEGIN: Second Child -->
               <Transition @enter="enter" @leave="leave">
                 <ul
-                  v-if="menu.subMenu && menu.activeDropdown"
+                  v-if="menu.getSubMenu() && menu.getActiveDropdown()"
                   class="rounded-lg bg-black/10 dark:bg-darkmode-900/30"
                 >
-                  <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
+                  <li v-for="(subMenu, subMenuKey) in menu.getSubMenu()" :key="subMenuKey">
                     <Menu
                       :class="{
                         // Animation
                         [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
                           (subMenuKey + 1) * 10
-                        }`]: !subMenu.active,
+                        }`]: !subMenu.getActive(),
                       }"
                       :menu="subMenu"
                       :formattedMenuState="[formattedMenu, setFormattedMenu]"
                       level="second"
                     ></Menu>
                     <!-- BEGIN: Third Child -->
-                    <Transition @enter="enter" @leave="leave" v-if="subMenu.subMenu">
+                    <Transition @enter="enter" @leave="leave" v-if="subMenu.getSubMenu()">
                       <ul
-                        v-if="subMenu.subMenu && subMenu.activeDropdown"
+                        v-if="subMenu.getSubMenu() && subMenu.getActiveDropdown()"
                         class="rounded-lg bg-black/10 dark:bg-darkmode-900/30"
                       >
-                        <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
+                        <li
+                          v-for="(lastSubMenu, lastSubMenuKey) in subMenu.getSubMenu()"
+                          :key="lastSubMenuKey"
+                        >
                           <Menu
                             :class="{
                               // Animation
                               [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
                                 (lastSubMenuKey + 1) * 10
-                              }`]: !lastSubMenu.active,
+                              }`]: !lastSubMenu.getActive(),
                             }"
                             :menu="lastSubMenu"
                             :formattedMenuState="[formattedMenu, setFormattedMenu]"

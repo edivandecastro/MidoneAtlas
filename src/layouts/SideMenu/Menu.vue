@@ -8,7 +8,8 @@ export default {
 import { useRouter } from "vue-router";
 import Lucide from "../../base-components/Lucide";
 import SideMenuTooltip from "./SideMenuTooltip.vue";
-import { FormattedMenu, linkTo } from "./side-menu";
+import { linkTo } from "./side-menu";
+import { FormattedMenu } from "@/models/FormattedMenu";
 
 interface MenuProps {
   class?: string | object;
@@ -28,11 +29,11 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
 <template>
   <SideMenuTooltip
     as="a"
-    :content="props.menu.title"
+    :content="props.menu.getTitle()"
     :href="
-      props.menu.subMenu
-        ? '#'
-        : ((pageName: string | undefined) => {
+      props.menu.getSubMenu()?.length === 0
+        ?
+          ((pageName: string | undefined) => {
             try {
               return router.resolve({
                 name: pageName,
@@ -40,24 +41,21 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
             } catch (err) {
               return '';
             }
-          })(props.menu.pageName)
+          })(props.menu.getPageName())
+        : '#'
     "
     :class="[
       'h-[50px] flex items-center pl-5 text-white mb-1 relative rounded-full',
       {
-        'dark:text-slate-300': props.menu.active && props.level != 'first',
-        'text-white/70 dark:text-slate-400':
-          !props.menu.active && props.level != 'first',
-        'z-10 bg-slate-100 dark:bg-darkmode-700':
-          props.menu.active && props.level == 'first',
+        'dark:text-slate-300': props.menu.getActive() && props.level != 'first',
+        'text-white/70 dark:text-slate-400': !props.menu.getActive() && props.level != 'first',
+        'z-10 bg-slate-100 dark:bg-darkmode-700': props.menu.getActive() && props.level == 'first',
         'before:content-[\'\'] before:w-[30px] before:h-[30px] before:-mt-[30px] before:rotate-90 before:scale-[1.04] before:bg-[length:100%] before:bg-menu-corner before:absolute before:top-0 before:right-0 before:-mr-5 dark:before:bg-menu-corner-dark':
-          props.menu.active && props.level == 'first',
+          props.menu.getActive() && props.level == 'first',
         'after:content-[\'\'] after:w-[30px] after:h-[30px] after:mt-[50px] after:scale-[1.04] after:bg-[length:100%] after:bg-menu-corner after:absolute after:top-0 after:right-0 after:-mr-5 dark:after:bg-menu-corner-dark':
-          props.menu.active && props.level == 'first',
+          props.menu.getActive() && props.level == 'first',
         '[&>div:nth-child(1)]:hover:before:bg-white/5 [&>div:nth-child(1)]:hover:before:dark:bg-darkmode-500/70':
-          !props.menu.active &&
-          !props.menu.activeDropdown &&
-          props.level == 'first',
+          !props.menu.getActive() && !props.menu.getActiveDropdown() && props.level == 'first',
       },
       props.class,
     ]"
@@ -69,37 +67,33 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
   >
     <div
       :class="{
-        'text-primary dark:text-slate-300':
-          props.menu.active && props.level == 'first',
-        'dark:text-slate-400': !props.menu.active && props.level == 'first',
+        'text-primary dark:text-slate-300': props.menu.getActive() && props.level == 'first',
+        'dark:text-slate-400': !props.menu.getActive() && props.level == 'first',
         'before:content-[\'\'] before:z-[-1] before:absolute before:top-0 before:right-0 before:-mr-5 before:w-12 before:h-full before:bg-slate-100 before:dark:bg-darkmode-700':
-          props.menu.active && props.level == 'first',
+          props.menu.getActive() && props.level == 'first',
         'before:content-[\'\'] before:z-[-1] before:w-[230px] before:absolute before:top-0 before:left-0 before:h-full before:rounded-l-full before:transition before:ease-in before:duration-100':
-          !props.menu.activeDropdown &&
-          !props.menu.active &&
-          props.level == 'first',
+          !props.menu.getActiveDropdown() && !props.menu.getActive() && props.level == 'first',
       }"
     >
-      <Lucide :icon="props.menu.icon" />
+      <Lucide :icon="props.menu.getIcon()" />
     </div>
     <div
       :class="[
         'hidden xl:flex items-center w-full ml-3',
-        { 'font-medium': props.menu.active && props.level != 'first' },
+        { 'font-medium': props.menu.getActive() && props.level != 'first' },
         {
-          'text-slate-800 font-medium dark:text-slate-300':
-            props.menu.active && props.level == 'first',
+          'text-slate-800 font-medium dark:text-slate-300': props.menu.getActive() && props.level == 'first',
         },
-        { 'dark:text-slate-400': !props.menu.active && props.level == 'first' },
+        { 'dark:text-slate-400': !props.menu.getActive() && props.level == 'first' },
       ]"
     >
-      {{ props.menu.title }}
+      {{ props.menu.getTitle() }}
 
       <div
-        v-if="props.menu.subMenu"
+        v-if="props.menu.getSubMenu()?.length !== 0"
         :class="[
           'transition ease-in duration-100 ml-auto mr-5 hidden xl:block',
-          { 'transform rotate-180': props.menu.activeDropdown },
+          { 'transform rotate-180': props.menu.getActiveDropdown() },
         ]"
       >
         <Lucide class="w-4 h-4" icon="ChevronDown" />
