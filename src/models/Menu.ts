@@ -15,7 +15,7 @@ export class Menu {
     this.ignore = ignore;
   }
 
-  public getIcon(): string {
+  public getIcon(): Icon {
     return this.icon;
   }
 
