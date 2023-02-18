@@ -24,9 +24,9 @@ await menuService.getMenus()
     response.data.menus.forEach((menu: MenuApi) => {
       let submenus: Menu[] = []
       menu.submenus?.forEach((menu: MenuApi) => {
-        submenus.push(new Menu(menu.icon, menu.title, menu.page_name))
+        submenus.push(new Menu(menu.icon, menu.title, menu.page_name, [], menu.ignore))
       })
-      menus.menu.push(new Menu(menu.icon, menu.title, menu.page_name, submenus))
+      menus.menu.push(new Menu(menu.icon, menu.title, menu.page_name, submenus, menu.ignore))
     });
   })
   .catch(error => {
