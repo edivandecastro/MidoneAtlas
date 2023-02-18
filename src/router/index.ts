@@ -4,6 +4,8 @@ import SimpleMenu from "../layouts/SimpleMenu/SimpleMenu.vue";
 import TopMenu from "../layouts/TopMenu/TopMenu.vue";
 import Page1 from "../pages/Page1.vue";
 import Page2 from "../pages/Page2.vue";
+import Page3 from "../pages/Page3.vue";
+import Page4 from "../pages/Page4.vue";
 
 const routes = [
   {
@@ -19,6 +21,16 @@ const routes = [
         path: "page-2",
         name: "side-menu-page-2",
         component: Page2,
+      },
+      {
+        path: "page-3",
+        name: "side-menu-page-3",
+        component: Page3,
+      },
+      {
+        path: "page-4",
+        name: "side-menu-page-4",
+        component: Page4,
       },
     ],
   },
