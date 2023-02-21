@@ -39,6 +39,7 @@ type Variant =
 type Elevated = boolean;
 type Size = "sm" | "lg";
 type Rounded = boolean;
+type Event = () => void;
 
 interface ButtonProps extends ButtonHTMLAttributes {
   as?: string | object;
@@ -46,14 +47,13 @@ interface ButtonProps extends ButtonHTMLAttributes {
   elevated?: Elevated;
   size?: Size;
   rounded?: Rounded;
+  onClick?: Event;
 }
 
-const { as, size, variant, elevated, rounded } = withDefaults(
-  defineProps<ButtonProps>(),
-  {
-    as: "button",
-  }
-);
+const { as, size, variant, elevated, rounded, onClick } = withDefaults(defineProps<ButtonProps>(), {
+  as: "button",
+  onClick: () => {},
+});
 
 const attrs = useAttrs();
 
@@ -105,18 +105,10 @@ const dark = [
 ];
 
 // Social Media
-const facebook = [
-  "bg-[#3b5998] border-[#3b5998] text-white dark:border-[#3b5998]",
-];
-const twitter = [
-  "bg-[#4ab3f4] border-[#4ab3f4] text-white dark:border-[#4ab3f4]",
-];
-const instagram = [
-  "bg-[#517fa4] border-[#517fa4] text-white dark:border-[#517fa4]",
-];
-const linkedin = [
-  "bg-[#0077b5] border-[#0077b5] text-white dark:border-[#0077b5]",
-];
+const facebook = ["bg-[#3b5998] border-[#3b5998] text-white dark:border-[#3b5998]"];
+const twitter = ["bg-[#4ab3f4] border-[#4ab3f4] text-white dark:border-[#4ab3f4]"];
+const instagram = ["bg-[#517fa4] border-[#517fa4] text-white dark:border-[#517fa4]"];
+const linkedin = ["bg-[#0077b5] border-[#0077b5] text-white dark:border-[#0077b5]"];
 
 // Outline
 const outlinePrimary = [
@@ -232,10 +224,14 @@ const computedClass = computed(() =>
     typeof attrs.class === "string" && attrs.class,
   ])
 );
+
+const onRun = (): void => {
+  onClick();
+};
 </script>
 
 <template>
-  <component :is="as" :class="computedClass" v-bind="_.omit(attrs, 'class')">
+  <component :is="as" :class="computedClass" v-bind="_.omit(attrs, 'class')" @click="onRun">
     <slot></slot>
   </component>
 </template>
