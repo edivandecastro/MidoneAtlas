@@ -52,7 +52,7 @@ onMounted(() => {
     <div class="flex mt-[4.7rem] md:mt-0">
       <!-- BEGIN: Side Menu -->
       <nav class="pr-5 pb-16 overflow-x-hidden hidden md:block w-[85px] xl:w-[230px]">
-        <RouterLink :to="{ name: 'side-menu-page-1' }" class="flex items-center pt-4 pl-5 intro-x">
+        <RouterLink :to="{ name: 'main' }" class="flex items-center pt-4 pl-5 intro-x">
           <img alt="Midone Tailwind HTML Admin Template" class="w-6" :src="logoUrl" />
           <span class="hidden ml-3 text-lg text-white xl:block"> Rubick </span>
         </RouterLink>

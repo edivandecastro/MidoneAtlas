@@ -2,11 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 import SimpleMenu from "../layouts/SimpleMenu/SimpleMenu.vue";
 import TopMenu from "../layouts/TopMenu/TopMenu.vue";
-import Page1 from "../pages/Page1.vue";
 import Page2 from "../pages/Page2.vue";
 import Page3 from "../pages/Page3.vue";
 import Page4 from "../pages/Page4.vue";
-import NewLocation from "../pages/NewLocation.vue";
+import ListLocation from "@/pages/ListLocation.vue";
+import NewLocation from "@/pages/NewLocation.vue";
 
 const routes = [
   {
@@ -15,8 +15,13 @@ const routes = [
     children: [
       {
         path: "/",
-        name: "side-menu-page-1",
-        component: Page1,
+        name: "main",
+        component: ListLocation,
+      },
+      {
+        path: "lista_unidades",
+        name: "list-locations",
+        component: ListLocation,
       },
       {
         path: "page-2",
@@ -47,7 +52,7 @@ const routes = [
       {
         path: "page-1",
         name: "simple-menu-page-1",
-        component: Page1,
+        component: ListLocation,
       },
       {
         path: "page-2",
@@ -63,7 +68,7 @@ const routes = [
       {
         path: "page-1",
         name: "top-menu-page-1",
-        component: Page1,
+        component: ListLocation,
       },
       {
         path: "page-2",
