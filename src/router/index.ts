@@ -6,6 +6,7 @@ import Page1 from "../pages/Page1.vue";
 import Page2 from "../pages/Page2.vue";
 import Page3 from "../pages/Page3.vue";
 import Page4 from "../pages/Page4.vue";
+import NewLocation from "../pages/NewLocation.vue";
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
         path: "page-4",
         name: "side-menu-page-4",
         component: Page4,
+      },
+      {
+        path: "nova_unidade",
+        name: "new-location",
+        component: NewLocation,
       },
     ],
   },

@@ -16,13 +16,20 @@ const setDeleteConfirmationModal = (value: boolean) => {
   deleteConfirmationModal.value = value;
 };
 const deleteButtonRef = ref(null);
+const router = useRouter();
+
+const onAddNewLocation = () => {
+  router.push({ name: "new-location" });
+};
 </script>
 
 <template>
   <h2 class="mt-10 text-lg font-medium intro-y">Unidades</h2>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
-      <Button variant="primary" class="mr-2" :elevated="true"> Adicionar Nova Unidade </Button>
+      <Button variant="primary" class="mr-2" :elevated="true" @click="onAddNewLocation">
+        Adicionar Nova Unidade
+      </Button>
       <Menu>
         <Menu.Button :as="Button" class="px-2 !box">
           <span class="flex items-center justify-center w-5 h-5">
