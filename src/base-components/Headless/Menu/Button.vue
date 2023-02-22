@@ -27,7 +27,7 @@ const computedClass = computed(() =>
 <template>
   <HeadlessMenuButton as="template">
     <component :is="as" :class="computedClass" v-bind="_.omit(attrs, 'class')">
-      <slot></slot
-    ></component>
+      <slot></slot>
+    </component>
   </HeadlessMenuButton>
 </template>

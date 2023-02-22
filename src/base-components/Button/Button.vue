@@ -47,12 +47,12 @@ interface ButtonProps extends ButtonHTMLAttributes {
   elevated?: Elevated;
   size?: Size;
   rounded?: Rounded;
-  onClick?: Event;
+  clickMe?: Event;
 }
 
-const { as, size, variant, elevated, rounded, onClick } = withDefaults(defineProps<ButtonProps>(), {
+const { as, size, variant, elevated, rounded, clickMe } = withDefaults(defineProps<ButtonProps>(), {
   as: "button",
-  onClick: () => {},
+  clickMe: () => {},
 });
 
 const attrs = useAttrs();
@@ -226,7 +226,7 @@ const computedClass = computed(() =>
 );
 
 const onRun = (): void => {
-  onClick();
+  clickMe();
 };
 </script>
 
