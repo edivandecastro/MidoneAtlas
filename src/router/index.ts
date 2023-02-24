@@ -5,7 +5,7 @@ import TopMenu from "../layouts/TopMenu/TopMenu.vue";
 import Page2 from "../pages/Page2.vue";
 import Page3 from "../pages/Page3.vue";
 import Page4 from "../pages/Page4.vue";
-import ListLocation from "@/pages/ListLocation.vue";
+import ListLocations from "@/pages/ListLocations.vue";
 import NewLocation from "@/pages/NewLocation.vue";
 
 const routes = [
@@ -16,12 +16,12 @@ const routes = [
       {
         path: "/",
         name: "main",
-        component: ListLocation,
+        component: ListLocations,
       },
       {
         path: "lista_unidades",
         name: "list-locations",
-        component: ListLocation,
+        component: ListLocations,
       },
       {
         path: "page-2",
@@ -52,7 +52,7 @@ const routes = [
       {
         path: "page-1",
         name: "simple-menu-page-1",
-        component: ListLocation,
+        component: ListLocations,
       },
       {
         path: "page-2",
@@ -68,7 +68,7 @@ const routes = [
       {
         path: "page-1",
         name: "top-menu-page-1",
-        component: ListLocation,
+        component: ListLocations,
       },
       {
         path: "page-2",
