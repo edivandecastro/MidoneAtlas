@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Icon } from "../base-components/Lucide/Lucide.vue";
+import { MenuApi } from "@/utils/interfaces";
 
 export interface Menu {
   icon: Icon;
@@ -10,7 +11,7 @@ export interface Menu {
 }
 
 export interface TopMenuState {
-  menu: Array<Menu>;
+  menu: Array<MenuApi>;
 }
 
 export const useTopMenuStore = defineStore("topMenu", {
