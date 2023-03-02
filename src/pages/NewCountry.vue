@@ -4,29 +4,13 @@ import Toastify from "toastify-js";
 import Notification from "@/base-components/Notification";
 import Lucide from "../base-components/Lucide";
 import { FormInput, FormLabel, FormSelect, FormTextarea, FormInline } from "@/base-components/Form";
-import { required, minLength, maxLength } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { reactive, toRefs } from "vue";
 import { CountryService } from "@/services/CountryService";
 import { baseUrl } from "@/services/Api";
 import { Country } from "@/models/Country";
 import { CountryApi } from "@/utils/interfaces";
-
-const rules = {
-  name: {
-    required,
-  },
-  locale: {
-    required,
-    maxLength: maxLength(8),
-    minLength: minLength(2),
-  },
-  acronym: {
-    required,
-    maxLength: maxLength(4),
-    minLength: minLength(3),
-  },
-};
+import { CountryFormValidation } from "@/utils/ValidationFormRules";
 
 const formData: CountryApi = reactive({
   name: "",
@@ -62,11 +46,12 @@ const showToastifyFail = () => {
   showToast(failedEl);
 };
 
-const validate = useVuelidate(rules, toRefs(formData));
+const validate = useVuelidate(CountryFormValidation, toRefs(formData));
 const countryService = new CountryService(baseUrl.atlas_api_v1);
 
 const onSubmit = () => {
   validate.value.$touch();
+
   if (validate.value.$invalid) {
     showToastifyFail();
   } else {
@@ -81,7 +66,6 @@ const onSubmit = () => {
         console.log(error);
       });
   }
-  // console.log(validate.value.$error);
 };
 </script>
 
