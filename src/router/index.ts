@@ -7,6 +7,8 @@ import Page3 from "../pages/Page3.vue";
 import Page4 from "../pages/Page4.vue";
 import ListLocations from "@/pages/ListLocations.vue";
 import NewLocation from "@/pages/NewLocation.vue";
+import ListCountries from "@/pages/ListCountries.vue";
+import NewCountry from "@/pages/NewCountry.vue";
 
 const routes = [
   {
@@ -42,6 +44,16 @@ const routes = [
         path: "nova_unidade",
         name: "new-location",
         component: NewLocation,
+      },
+      {
+        path: "lista_paises",
+        name: "list-countries",
+        component: ListCountries,
+      },
+      {
+        path: "novo_pais",
+        name: "new-country",
+        component: NewCountry,
       },
     ],
   },
