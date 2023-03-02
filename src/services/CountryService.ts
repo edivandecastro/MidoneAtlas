@@ -1,3 +1,4 @@
+import { Country } from '@/models/Country';
 import { getAxios } from '@/services/Api'
 
 export class CountryService {
@@ -9,9 +10,15 @@ export class CountryService {
     this.token = token;
   }
 
-  public async getCountries() {
+  public async all() {
     const api = getAxios(this.baseUrl, this.token);
 
     return api.get('/countries');
+  }
+
+  public async create(country: Country) {
+    const api = getAxios(this.baseUrl, this.token);
+
+    return api.post('/countries', { country });
   }
 }
