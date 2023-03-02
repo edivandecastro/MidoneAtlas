@@ -1,7 +1,7 @@
 import { Icon } from "../base-components/Lucide/Lucide.vue";
 
 export interface CountryApi {
-  id: string;
+  id?: string;
   name: string;
   locale: string;
   acronym: string;

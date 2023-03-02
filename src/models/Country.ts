@@ -1,7 +1,7 @@
 import { CountryApi } from "@/utils/interfaces";
 
 export class Country {
-  private id: string
+  private id?: string
   private name: string
   private locale: string
   private acronym: string
@@ -13,7 +13,7 @@ export class Country {
     this.acronym = acronym;
   }
 
-  public getId(): string {
+  public getId(): string | undefined {
     return this.id;
   }
 
